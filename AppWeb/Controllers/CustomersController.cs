@@ -21,8 +21,7 @@ namespace AppWeb.Controllers
         
         public ActionResult Index()
         {
-            var customers = _objDataModel.Customers.Include(c =>c.MembershipType).ToList();
-            return View(customers);
+            return View();
         }
 
         public ActionResult New()

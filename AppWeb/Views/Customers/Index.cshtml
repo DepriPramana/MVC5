@@ -1,5 +1,4 @@
-﻿@model IEnumerable<AppWeb.Models.Customers>
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -8,41 +7,19 @@
 <div class="form-group">
     @Html.ActionLink("New Customer", "New", "Customers", null, new { @class = "btn btn-primary" })
 </div>
-    @if (!Model.Any())
-    {
-        <h4>we don't have any customer yet.s</h4>
-    }
-    else
-    {
-        <table id="customers" class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Customer Name</th>
-                    <th scope="col">Membership Type</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    var i = 1;
-                }
-                @foreach (var customer in Model)
-                {
-
-                <tr>
-                    <th scope="row">@i</th>
-                    <td>@Html.ActionLink(customer.Name, "Edit", "Customers", new { id = customer.Id }, null) </td>
-                    <td>@customer.MembershipType.Name</td>
-                    <td><button data-customer-id="@customer.Id" class="btn btn-danger js-delete">Delete</button></td>
-                </tr>
-                    i++;
-                }
-
-            </tbody>
-        </table>
-
-    }
+    
+<table id="customers" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Customer Name</th>
+            <th scope="col">Membership Type</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>         
+    </tbody>
+</table>
 
 @section scripts
     {
@@ -54,8 +31,25 @@
                     dataSrc:""
                 },
                 columns: [{
-                    data:"name"
-                }]
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    }, {
+                        data: name, //or you can input name becuase already display in customers.name
+                        render: function (data, type, customers) {
+                            return "<a href='/customers/edit/" + customers.id + "'>" + customers.name + "</a>";
+                        }
+                    }, {
+                        data: "name"
+                    }, {
+                        data: "id",
+                        width: "15%",
+                        render: function (data, type, customers) {
+                            return "<button data-customer-id=" + customers.id + " class='btn btn-danger js-delete'>Delete</button> <a href='/customers/edit/" + customers.id + "' class='btn btn-primary'>Edit</a>";
+                        }
+                    }
+                ]
             });
 
             $("#customers").on("click",".js-delete", function () {
