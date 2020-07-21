@@ -32,11 +32,12 @@
                     dataSrc:""
                 },
                 columns: [{
-                        data: null,
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    }, {
+                    data: null,
+                    orderable: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                }, {
                         data: name, //or you can input name becuase already display in customers.name
                         render: function (data, type, customers) {
                             return "<a href='/customers/edit/" + customers.id + "'>" + customers.name + "</a>";
