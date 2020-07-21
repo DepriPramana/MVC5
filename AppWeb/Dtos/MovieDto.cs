@@ -16,6 +16,8 @@ namespace AppWeb.Dtos
         
         public byte GenreId { get; set; }
 
+        public GenreDto Genre { get; set; }
+
         [Required]
         [DisplayFormat(DataFormatString = "{0:d MMM yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ReleaseDate { get; set; }        

@@ -20,6 +20,7 @@ else
                 <th scope="col">#</th>
                 <th scope="col">Movie Name</th>
                 <th scope="col">Genre</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +33,9 @@ else
                     <th scope="row">@i</th>
                     <td> @Html.ActionLink(movie.Name, "Edit", "Movies", new { id = movie.Id }, null)</td>
                     <td>@movie.Genre.Name</td>
+                    <td><button class="btn btn-danger js-delete" data-movie-id="@movie.Id">Delete</button>
+                        <a class="btn btn-primary" data-movie-id="@movie.Id">Edit</a>
+                    </td>
                 </tr>
                 i++;
             }
@@ -43,7 +47,55 @@ else
     {
     <script>
     $(document).ready(function () {
-        $("#movies").DataTable();
+        $("#movies").DataTable({
+            ajax: {
+                url: "/api/movies",
+                deferRender: true,
+                dataSrc: ""               
+            },
+            columns: [{
+                    data:"name"
+
+                }, {
+                    data: "name"
+
+                }, {
+                    data: "name"
+
+                }, {
+                    data: "name"
+
+                }
+            ]
+        });
+
+        $("#movies").on("click", ".js-delete", function () {
+            var button = $(this);
+            bootbox.confirm({
+                message: "Are you sure to delete this record?",
+                buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-danger'
+                        }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/movies/" + button.attr("data-movie-id"),
+                            method: "DELETE",
+                            success: function () {
+                                button.parents("tr").remove();
+                            }
+                        });
+                    }
+                }
+            });
+        });
     });
     </script>
     }

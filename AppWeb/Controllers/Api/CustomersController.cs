@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
+using System.Data.Entity;
 using System.Web.Http;
 using AutoMapper;
 
@@ -21,16 +21,23 @@ namespace AppWeb.Controllers.Api
 
         // GET /api/customers
         [HttpGet]
-        public IEnumerable<CustomersDto> GetCustomers()
+        public IHttpActionResult GetCustomers()
         {
-            return _objDbContext.Customers.ToList().Select(Mapper.Map<Customers, CustomersDto>);
+            var customerDtos = _objDbContext.Customers
+                .Include(c => c.MembershipType)
+                .ToList()
+                .Select(Mapper.Map<Customers, CustomersDto>);
+
+            return Ok(customerDtos);
         }
 
         // GET 1 /api/customers/1
         [HttpGet]
         public IHttpActionResult GetCustomers(int id)
         {
-            var customer = _objDbContext.Customers.SingleOrDefault(c => c.Id == id);
+            var customer = _objDbContext.Customers
+                .Include(c => c.MembershipType)
+                .SingleOrDefault(c => c.Id == id);
 
             if (customer == null)
                 return NotFound();

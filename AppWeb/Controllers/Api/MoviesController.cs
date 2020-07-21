@@ -2,10 +2,9 @@
 using AppWeb.Models;
 using AutoMapper;
 using System;
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace AppWeb.Controllers.Api
@@ -21,16 +20,23 @@ namespace AppWeb.Controllers.Api
 
         // GET /api/customers
         [HttpGet]
-        public IEnumerable<MovieDto> GetMovies()
+        public IHttpActionResult GetMovies()
         {
-            return _objDbContext.Movies.ToList().Select(Mapper.Map<Movie, MovieDto>);
+            var movie = _objDbContext.Movies
+                .Include(m =>m.Genre)
+                .ToList()
+                .Select(Mapper.Map<Movie, MovieDto>);
+
+            return Ok(movie);
         }
 
         // GET 1 /api/customers/1
         [HttpGet]
         public IHttpActionResult GetMovies(int id)
         {
-            var movie = _objDbContext.Movies.SingleOrDefault(c => c.Id == id);
+            var movie = _objDbContext.Movies
+                .Include(m => m.Genre)
+                .SingleOrDefault(c => c.Id == id);
 
             if (movie == null)
                 return NotFound();
@@ -54,7 +60,7 @@ namespace AppWeb.Controllers.Api
         }
         // PUT /api/customers/1
         [HttpPut]
-        public void UpdateMovies(int id, MovieDto movieDto)
+        public IHttpActionResult UpdateMovies(int id, MovieDto movieDto)
         {
             if (!ModelState.IsValid)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -68,6 +74,8 @@ namespace AppWeb.Controllers.Api
 
 
             _objDbContext.SaveChanges();
+
+            return Ok(movieDto);
 
         }
         // DELETE /api/customers/1

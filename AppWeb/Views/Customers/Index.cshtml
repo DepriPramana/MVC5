@@ -25,9 +25,10 @@
     {
     <script>
         $(document).ready(function () {
-            $("#customers").DataTable({
+            var table = $("#customers").DataTable({
                 ajax: {
                     url: "/api/customers",
+                    deferRender: true,
                     dataSrc:""
                 },
                 columns: [{
@@ -41,7 +42,7 @@
                             return "<a href='/customers/edit/" + customers.id + "'>" + customers.name + "</a>";
                         }
                     }, {
-                        data: "name"
+                        data: "membershipType.name"
                     }, {
                         data: "id",
                         width: "15%",
@@ -68,12 +69,11 @@
                     },
                     callback: function (result) {
                         if (result) {
-                            console.log('This was logged in the callback: ' + result);
                             $.ajax({
                                 url: "/api/customers/" + button.attr("data-customer-id"),
                                 method: "DELETE",
                                 success: function () {
-                                    button.parents("tr").remove();
+                                    table.row(button.parents("tr")).remove().draw();
                                 }
                             });
                         }
