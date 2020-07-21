@@ -1,0 +1,14 @@
+﻿@model AppWeb.Models.Customers
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+<h4>@Model.Name</h4>
+<h4>MembershipType: @Model.MembershipType.Name</h4>
+@if (@Model.Birthdate.HasValue)
+{
+    <h4>Birthdate: @Model.Birthdate.Value.ToShortDateString()</h4>
+}
+

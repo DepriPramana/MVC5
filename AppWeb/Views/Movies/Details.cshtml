@@ -1,0 +1,14 @@
+﻿@model AppWeb.Models.Movie
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details Movie</h2>
+<h4>@Model.Name</h4>
+<h4>Genre: @Model.Genre.Name</h4>
+<h4>Release Date: @Model.ReleaseDate.ToLongDateString()</h4>
+<h4>Date Added: @Model.DateAdded.ToLongDateString()</h4>
+<h4>Number in Stock: @Model.InStock</h4>
+

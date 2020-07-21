@@ -1,0 +1,49 @@
+﻿@model IEnumerable<AppWeb.Models.Movie>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Movies List</h2>
+<div class="form-group">
+    @Html.ActionLink("New Movies", "New", "Movies", null, new { @class = "btn btn-primary" })
+</div>
+@if (!Model.Any())
+{
+    <h4>We don't have any movies now</h4>
+}
+else
+{
+    <table id="movies" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Movie Name</th>
+                <th scope="col">Genre</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var i = 1;
+            }
+            @foreach (var movie in Model)
+            {
+                <tr>
+                    <th scope="row">@i</th>
+                    <td> @Html.ActionLink(movie.Name, "Edit", "Movies", new { id = movie.Id }, null)</td>
+                    <td>@movie.Genre.Name</td>
+                </tr>
+                i++;
+            }
+
+        </tbody>
+    </table>
+}
+@section scripts
+    {
+    <script>
+    $(document).ready(function () {
+        $("#movies").DataTable();
+    });
+    </script>
+    }

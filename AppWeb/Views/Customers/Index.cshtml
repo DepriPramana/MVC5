@@ -1,0 +1,93 @@
+﻿@model IEnumerable<AppWeb.Models.Customers>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Customer List</h2>
+<div class="form-group">
+    @Html.ActionLink("New Customer", "New", "Customers", null, new { @class = "btn btn-primary" })
+</div>
+    @if (!Model.Any())
+    {
+        <h4>we don't have any customer yet.s</h4>
+    }
+    else
+    {
+        <table id="customers" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Membership Type</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var i = 1;
+                }
+                @foreach (var customer in Model)
+                {
+
+                <tr>
+                    <th scope="row">@i</th>
+                    <td>@Html.ActionLink(customer.Name, "Edit", "Customers", new { id = customer.Id }, null) </td>
+                    <td>@customer.MembershipType.Name</td>
+                    <td><button data-customer-id="@customer.Id" class="btn btn-danger js-delete">Delete</button></td>
+                </tr>
+                    i++;
+                }
+
+            </tbody>
+        </table>
+
+    }
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $("#customers").DataTable({
+                ajax: {
+                    url: "/api/customers",
+                    dataSrc:""
+                },
+                columns: [{
+                    data:"name"
+                }]
+            });
+
+            $("#customers").on("click",".js-delete", function () {
+                let button = $(this);
+                bootbox.confirm({
+                    message: "Are you sure want to detele thsi record?",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            console.log('This was logged in the callback: ' + result);
+                            $.ajax({
+                                url: "/api/customers/" + button.attr("data-customer-id"),
+                                method: "DELETE",
+                                success: function () {
+                                    button.parents("tr").remove();
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+        });
+    </script>
+        
+    }
